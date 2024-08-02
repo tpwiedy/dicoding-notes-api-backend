@@ -47,7 +47,7 @@ class NotesHandler {
   getNoteByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      const note = this._service.getNoteByIdHandler(id);
+      const note = this._service.getNoteById(id);
       return {
         status: 'success',
         data: {
@@ -64,7 +64,7 @@ class NotesHandler {
     }
   }
 
-  putNoteByIdHandler(request) {
+  putNoteByIdHandler(request, h) {
     try {
       const { id } = request.params;
       this._service.editNoteById(id, request.payload);
@@ -78,15 +78,16 @@ class NotesHandler {
         status: 'fail',
         message: error.message,
       });
-      response.code(401);
+      response.code(404);
       return response;
     }
   }
 
-  deleteNoteByIdHandler() {
+  deleteNoteByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      this._service.deleteNoteByIdHandler(id);
+      this._service.deleteNoteById(id);
+      
       return {
         status: 'success',
         message: 'Catatan berhasil dihapus',

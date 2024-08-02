@@ -29,7 +29,7 @@ class NotesService {
     return this._notes;
   }
 
-  getNotById(id) {
+  getNoteById(id) {
     const note = this._notes.filter((n) => n.id === id)[0];
     if(!note){
       throw new Error('Catatan tidak ditemukan');
@@ -55,10 +55,10 @@ class NotesService {
     };
   }
 
-  deleteNoteByIdHandler(id) {
+  deleteNoteById(id) {
     const index = this._notes.findIndex((note) => note.id === id);
 
-    if(!index) {
+    if(index === -1) {
       throw new Error('Catatan gagal dihapus. Id tidak ditemukan');
     }
 
