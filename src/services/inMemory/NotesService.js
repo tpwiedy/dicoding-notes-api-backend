@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: ["error", { "allow": ["_notes", "_pool"] }] */
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
@@ -8,22 +9,30 @@ class NotesService {
   }
 
   addNote({ title, body, tags }) {
+    // Generate a unique ID for the note
     const id = nanoid(16);
+
+    // Generate the creation and update timestamps
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
+    // Create the new note object
     const newNote = {
       title, tags, body, id, createdAt, updatedAt,
     };
 
+    // Add the new note to the list of notes
     this._notes.push(newNote);
 
+    // Check if the note was successfully added
     const isSuccess = this._notes.filter((note) => note.id === id).length > 0;
 
+    // Throw an error if the note could not be added
     if (!isSuccess) {
       throw new InvariantError('Catatan gagal ditambahkan');
     }
 
+    // Return the ID of the newly added note
     return id;
   }
 

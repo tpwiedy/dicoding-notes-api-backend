@@ -1,6 +1,8 @@
+require('dotenv').config();
+
 const Hapi = require('@hapi/hapi');
 const notes = require('./api/notes');
-const NotesService = require('./services/inMemory/NotesService');
+const NotesService = require('./services/postgres/NotesService');
 const NotesValidator = require('./validator/notes');
 const ClientError = require('./exceptions/ClientError');
 
@@ -8,8 +10,8 @@ const init = async () => {
   const notesService = new NotesService();
 
   const server = Hapi.server({
-    port: 3000,
-    host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
+    port: process.env.PORT,
+    host: process.env.HOST,
     routes: {
       cors: {
         origin: ['*'],
@@ -21,7 +23,7 @@ const init = async () => {
     plugin: notes,
     options: {
       service: notesService,
-      validator: NotesValidator
+      validator: NotesValidator,
     },
   });
 
@@ -29,8 +31,8 @@ const init = async () => {
     // mendapatkankan respons default hapi
     const { response } = request;
 
-    //penanganan client error secara internal
-    if(response instanceof ClientError) {
+    // penanganan client error secara internal
+    if (response instanceof ClientError) {
       const newResponse = h.response({
         status: 'fail',
         message: response.message,
