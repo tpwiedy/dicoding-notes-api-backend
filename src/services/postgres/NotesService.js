@@ -58,6 +58,8 @@ class NotesService {
 
     const result = await this._pool.query(query);
 
+    // console.log(result.rows[0].id);
+
     if (!result.rows.length) {
       throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
     }
