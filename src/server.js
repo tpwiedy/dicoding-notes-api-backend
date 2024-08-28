@@ -1,28 +1,30 @@
+// mengimpor dotenv dan menjalankan konfigurasinya
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
-const ClientError = require('./exceptions/ClientError');
-//Notes
+
+// notes
 const notes = require('./api/notes');
 const NotesService = require('./services/postgres/NotesService');
 const NotesValidator = require('./validator/notes');
 
-// Users
+// users
 const users = require('./api/users');
-const UsersService = require('./services/postgres/UserService');
+const UsersService = require('./services/postgres/UsersService');
 const UsersValidator = require('./validator/users');
 
-// Authentications
+// authentications
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/postgres/AuthenticationsService');
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
-// Collaborations
+// collaborations
 const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
+const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
@@ -109,6 +111,7 @@ const init = async () => {
         message: response.message,
       });
       newResponse.code(response.statusCode);
+      // console.log({ response });
       return newResponse;
     }
     return h.continue;
