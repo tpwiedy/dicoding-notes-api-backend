@@ -35,7 +35,7 @@ const ExportsValidator = require('./validator/exports');
 
 // uploads
 const uploads = require('./api/uploads');
-const StorageService = require('./services/StorageService');
+const StorageService = require('./services/S3/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
 const init = async () => {
@@ -43,9 +43,7 @@ const init = async () => {
   const notesService = new NotesService(collaborationsService);
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
-  const storageService = new StorageService(
-    path.resolve(__dirname, 'api/uploads/file/images')
-  );
+  const storageService = new StorageService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -64,7 +62,7 @@ const init = async () => {
     },
     {
       plugin: Inert,
-    }
+    },
   ]);
 
   // mendefinisikan strategy authentikasi jwt
