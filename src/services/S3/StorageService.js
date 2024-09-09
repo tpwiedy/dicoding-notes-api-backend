@@ -7,6 +7,7 @@ const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 class StorageService {
   constructor() {
+    // inisiasi region dan kredentials akun AWS
     this._S3 = new S3Client({
       region: process.env.AWS_REGION,
       credentials: {
@@ -24,14 +25,17 @@ class StorageService {
       ContentType: meta.headers['content-type'],
     });
 
+    // upload objek parameter ke S3 menggunakan fungsi this._S3.send
     await this._S3.send(parameter);
 
+    // fungsi writeFile akan mengembalikan url dari objek yang diupload
     return this.createPreSignedUrl({
       bucket: process.env.AWS_BUCKET_NAME,
       key: meta.filename,
     })
   }
 
+  // generate URL sehingga berkas yang diupload dapat diakes meskipun bucket dan objek bersifat private.
   createPreSignedUrl({ bucket, key }) {
     const command = new GetObjectCommand({ Bucket: bucket, Key: key });
     return getSignedUrl(this._S3, command, { expiresIn: 3600 })
